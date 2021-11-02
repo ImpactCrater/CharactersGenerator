@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>Music Player with Visualizer</title>
+</head>
+<body style="background-color: #282828; color: #cccccc">
+
+<style type="text/css">
+span.inlineBlock
+{
+ display: inline-block;
+}
+</style>
+<div id="areaOfcanvas1" style="font-size: small; text-align: center">
+<canvas id = "canvas1"></canvas><br />
+<div id = "areaOfButton1">
+<button id = "buttounToDrawCanvas" onclick = "drawCanvas()">Draw</button><br />
+</div>
+</div>
+
+<div id="description1" style="text-align: left; max-width: 720px; margin: 0 auto; font-size: 75%">
+"Draw" ボタンを押すとランダムに沢山の文字を描画します。
+<br />
+[このプログラムについて]<br />
+動作デモ ページ: <a href="https://impactcrater.github.io/CharactersGenerator" target="_blank">https://impactcrater.github.io/CharactersGenerator</a>
+<br />
+ソース コード: <a href="https://github.com/ImpactCrater/CharactersGenerator" target="_blank">https://github.com/ImpactCrater/CharactersGenerator</a>
+<br />
+"<strong>HTML5</strong>" の "<strong>Canvas</strong>" 要素を利用して画面の描画をしております。<br />
+このプログラムのコードは全てブログ記事のHTML文書内に "<strong>JavaScript</strong>" で記述したものであり、作成するに当たってテキスト エディターとウェブ ブラウザー以外は何も使用しておりません。<br />
+追加のライブラリーなどは一切使用せず、純粋にHTML5対応ブラウザーだけで動作致します。<br />
+"Firefox 94" 以降では動作確認済みです。<br />
+<br />
+</p>
+</div>
+
+<script type = "text/javascript">
+
+
+// 他のファイルのグローバル変数とこのファイルのグローバル変数の衝突を避ける為に、コンストラクターでモジュール全体のスコープを形成し、即時実行する。
+/** @constructor */
+var globalObjectOfThisProgram = function()
+{
+///////////////////////////////////////////////////////
+
+var canvasContext;
+var canvasLayer1;
+var instanceOfCanvasInitializer = null;
+var instanceOfArtCanvas = null;
+var instanceOfCharacterDrawer = null;
+
+// Canvasを初期化するコンストラクターを関数式により定義する。
+/** @constructor */ 
+var canvasInitializer = function()
+{
+ // Canvas要素を取得し、変数に格納して置く。
+ canvasElement = document.getElementById( 'canvas1' );
+
+ canvasElement.width = Math.min(
+  document.documentElement.clientWidth, document.getElementById( 'areaOfcanvas1' ).clientWidth,
+  document.documentElement.clientHeight * 0.82 );
+ canvasElement.height = canvasElement.width;
+
+ // 実際に画面上に表示されるCanvas要素のコンテキストを作成する。
+ canvasContext = document.getElementById( "canvas1" ).getContext( "2d" );
+
+ // オフスクリーン描画用のCanvas要素のコンテキストを作成する。
+ canvasLayer1 = document.createElement( "canvas" );
+ canvasLayer1.width = canvasContext.canvas.width;
+ canvasLayer1.height = canvasContext.canvas.height;
+ canvasContextLayer1 = canvasLayer1.getContext( "2d" );
+};
+
+// 画面を塗り潰す為のプロトタイプのメソッドを定義する。
+canvasInitializer.prototype.drawToCanvasInitializer = function()
+{
+ // 実際に画面上に表示されるCanvas要素のコンテキストに対して塗り潰しを行う。
+ canvasContext.fillStyle = "rgba( 128, 128, 128, 1 )";
+ canvasContext.fillRect( 0, 0, canvasContext.canvas.width, canvasContext.canvas.height );
+};
+
+instanceOfCanvasInitializer = new canvasInitializer();
+
+///////////////////////////////////////////////////////
+
+
+// Canvasに関するコンストラクターを関数式により定義する。
+/** @constructor */ 
+var artCanvas = function()
+{
+ this.clearArtCanvas(); // 画面を初期化する。
+};
+
+// 画面を表示する為のプロトタイプのメソッドを定義する。
+artCanvas.prototype.displayCanvas = function()
+{
+ // 実際に画面上に表示されるCanvas要素のコンテキストに対してオフスクリーン描画用のCanvas要素の内容を転写する。
+ canvasContext.drawImage( canvasLayer1, 0, 0 ); // 背景を描画する。
+};
+
+// 画面を初期化する為のプロトタイプのメソッドを定義する。
+artCanvas.prototype.clearArtCanvas = function()
+{
+ canvasContextLayer1.clearRect( 0, 0, canvasContext.canvas.width, canvasContext.canvas.height );
+ instanceOfCanvasInitializer.drawToCanvasInitializer();
+};
+
+instanceOfArtCanvas = new artCanvas();
+
+
+///////////////////////////////////////////////////////
+
+
+characterList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+
+// 文字描画のコンストラクターを関数式により定義する。
+/** @constructor */
+var characterDrawer = function()
+{
+};
+
+
+///////////////////////////////////////////////////////
+
+
+// 文字を描画する為のプロトタイプのメソッドを定義する。
+characterDrawer.prototype.drawCharacter = function()
+{
+ canvasContextLayer1.save(); // 描画設定を保存する。
+
+ var canvasWidth = canvasLayer1.width;
+ var canvasHeight = canvasLayer1.height;
+ var numberOfCharacter = characterList.length;
+ var hueOfCharacter = 0; // 色相を初期化する。
+ var saturationOfCharacter = 100; // 彩度を初期化する。
+ var lightnessOfCharacter = 50; // 輝度を初期化する。
+ var numberOfCharacterToDraw = 2048;
+ var i = 0;
+ for( i = 0; i < numberOfCharacterToDraw; i++ )
+ {
+  // 文字の設定をする。
+  hueOfCharacter = 360 * Math.random();
+  saturationOfCharacter = 100 * Math.random();
+  lightnessOfCharacter = 100 * Math.random();
+  canvasContextLayer1.fillStyle = 'hsla( ' + hueOfCharacter + ', ' + saturationOfCharacter + '%, ' + lightnessOfCharacter + '%,' + 1.00 + ')';
+  characterSize = 64 + Math.floor( 1024 * Math.random() );
+  canvasContextLayer1.font = characterSize + "px 'sans-serif'";
+  canvasContextLayer1.textAlign = "left";
+  canvasContextLayer1.textBaseline = "top";
+
+  // 文字を描画する。
+  characterNumber = Math.floor( numberOfCharacter * Math.random() );
+  coordinateX = (canvasWidth + 2 * characterSize) * Math.random() - characterSize;
+  coordinateY = (canvasHeight + 2 * characterSize) * Math.random() - characterSize;
+  canvasContextLayer1.fillText(
+   characterList[characterNumber],
+   coordinateX,
+   coordinateY );
+ }
+
+ canvasContextLayer1.restore(); // 描画の設定を元に戻す。
+
+ instanceOfArtCanvas.displayCanvas(); // 画面を描画する。
+};
+
+instanceOfCharacterDrawer = new characterDrawer();
+
+
+///////////////////////////////////////////////////////
+
+
+// 描画ボタンの関数の宣言と定義をする。
+function drawCanvas()
+{
+ if( instanceOfArtCanvas != null && instanceOfCharacterDrawer != null )
+ {
+  instanceOfArtCanvas.clearArtCanvas(); // 画面を消去する。
+  instanceOfCharacterDrawer.drawCharacter(); // 文字を描画させる。
+ }
+}
+
+
+
+///////////////////////////////////////////////////////
+
+
+window["drawCanvas"] = drawCanvas;
+
+
+///////////////////////////////////////////////////////
+} // モジュール全体のスコープの終わり。
+new globalObjectOfThisProgram(); // コンストラクターを実行する。
+
+
+</script>
+</body>
+</html>
