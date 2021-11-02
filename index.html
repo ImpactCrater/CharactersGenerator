@@ -13,25 +13,25 @@ span.inlineBlock
 }
 </style>
 <div id="areaOfcanvas1" style="font-size: small; text-align: center">
-<canvas id = "canvas1"></canvas><br />
+<canvas id = "canvas1"></canvas><br>
 <div id = "areaOfButton1">
-<button id = "buttounToDrawCanvas" onclick = "drawCanvas()">Draw</button><br />
+<button id = "buttounToDrawCanvas" onclick = "drawCanvas()">Draw</button><br>
 </div>
 </div>
 
 <div id="description1" style="text-align: left; max-width: 720px; margin: 0 auto; font-size: 75%">
 "<span style="color:#4080CE;">Draw</span>" ボタンを押すと<span style="color:#4080CE;">ランダムに沢山の文字を描画</span>します。
-<br />
-[このプログラムについて]<br />
+<br>
+[このプログラムについて]<br>
 動作デモ ページ: <a href="https://impactcrater.github.io/CharactersGenerator" target="_blank">https://impactcrater.github.io/CharactersGenerator</a>
-<br />
+<br>
 ソース コード: <a href="https://github.com/ImpactCrater/CharactersGenerator" target="_blank">https://github.com/ImpactCrater/CharactersGenerator</a>
-<br />
-"<strong>HTML5</strong>" の "<strong>Canvas</strong>" 要素を利用して画面の描画をしております。<br />
-このプログラムのコードは全てブログ記事のHTML文書内に "<strong>JavaScript</strong>" で記述したものであり、作成するに当たってテキスト エディターとウェブ ブラウザー以外は何も使用しておりません。<br />
-追加のライブラリーなどは一切使用せず、純粋にHTML5対応ブラウザーだけで動作致します。<br />
-"Firefox 94" 以降では動作確認済みです。<br />
-<br />
+<br>
+"<strong>HTML5</strong>" の "<strong>Canvas</strong>" 要素を利用して画面の描画をしております。<br>
+このプログラムのコードは全てブログ記事のHTML文書内に "<strong>JavaScript</strong>" で記述したものであり、作成するに当たってテキスト エディターとウェブ ブラウザー以外は何も使用しておりません。<br>
+追加のライブラリーなどは一切使用せず、純粋にHTML5対応ブラウザーだけで動作致します。<br>
+"Firefox 94" 以降では動作確認済みです。<br>
+<br>
 </p>
 </div>
 
@@ -76,7 +76,7 @@ var canvasInitializer = function()
 canvasInitializer.prototype.drawToCanvasInitializer = function()
 {
  // 実際に画面上に表示されるCanvas要素のコンテキストに対して塗り潰しを行う。
- canvasContext.fillStyle = "rgba( 128, 128, 128, 1 )";
+ canvasContext.fillStyle = "rgba( 96, 96, 96, 1 )";
  canvasContext.fillRect( 0, 0, canvasContext.canvas.width, canvasContext.canvas.height );
 };
 
